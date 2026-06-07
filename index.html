@@ -52,6 +52,7 @@
     @media (prefers-reduced-motion: reduce) { #card { transition: opacity .12s ease; transform: none; } #card.show { transform: none; } }
     #fallback { position: fixed; inset: 0; z-index: 30; display: grid; place-content: center;
                 text-align: center; gap: 6px; padding: 24px; background: #05070d; color: #aeb9cd; }
+    #fallback[hidden] { display: none; }   /* the hidden attr must win over the #id display:grid above */
     #fallback p { margin: 0; }
   </style>
 </head>

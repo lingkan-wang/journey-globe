@@ -19,3 +19,7 @@
 {"ts":"2026-06-07T02:05:01.422Z","cmd":"js","args":"getComputedStyle(document.getElementById('ui')).display","origin":"http://localhost:8080/","durationMs":1,"status":"ok","hasCookies":false,"mode":"launched"}
 {"ts":"2026-06-07T02:05:01.465Z","cmd":"js","args":"document.body.innerText.includes('needs WebGL')","origin":"http://localhost:8080/","durationMs":1,"status":"ok","hasCookies":false,"mode":"launched"}
 {"ts":"2026-06-07T02:05:01.603Z","cmd":"screenshot","args":"/tmp/jg-fallback.png","origin":"http://localhost:8080/","durationMs":94,"status":"ok","hasCookies":false,"mode":"launched"}
+{"ts":"2026-06-07T02:49:57.535Z","cmd":"goto","args":"https://lingkan-wang.github.io/journey-globe/","origin":"https://lingkan-wang.github.io/journey-globe/","durationMs":258,"status":"ok","hasCookies":false,"mode":"launched"}
+{"ts":"2026-06-07T02:50:00.622Z","cmd":"js","args":"document.querySelectorAll('#fallback p').length","origin":"https://lingkan-wang.github.io/journey-globe/","durationMs":2,"status":"ok","hasCookies":false,"mode":"launched"}
+{"ts":"2026-06-07T02:50:00.666Z","cmd":"js","args":"document.getElementById('fallback').innerText","origin":"https://lingkan-wang.github.io/journey-globe/","durationMs":0,"status":"ok","hasCookies":false,"mode":"launched"}
+{"ts":"2026-06-07T02:50:00.708Z","cmd":"console","args":"","origin":"https://lingkan-wang.github.io/journey-globe/","durationMs":0,"status":"ok","hasCookies":false,"mode":"launched"}
