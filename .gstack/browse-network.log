@@ -4,3 +4,6 @@
 [2026-06-07T03:16:13.212Z] GET https://lingkan-wang.github.io/journey-globe/?cb=verify → 200 (139ms, 8944B)
 [2026-06-07T03:16:13.391Z] GET https://unpkg.com/three@0.128.0/build/three.min.js → 200 (?ms, -825B)
 [2026-06-07T03:16:13.392Z] GET https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js → 200 (?ms, -825B)
+[2026-06-07T03:33:58.426Z] GET https://lingkan-wang.github.io/journey-globe/?cb=verify2 → 200 (181ms, 9357B)
+[2026-06-07T03:33:58.649Z] GET https://unpkg.com/three@0.128.0/build/three.min.js → 200 (?ms, -825B)
+[2026-06-07T03:33:58.649Z] GET https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js → 200 (?ms, -825B)

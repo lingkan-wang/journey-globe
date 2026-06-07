@@ -82,7 +82,7 @@
   <script>
   // === CONSTANTS ===
   const ACCENT_HEX = 0x156BF3;
-  const FIELD_COLOR = 0x768ab0;   // slate dots for light background
+  const FIELD_COLOR = 0x3f5176;   // darker blue-slate dots, clear on near-white
   const R = 100;                  // globe radius
   const DEG = Math.PI / 180;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -269,7 +269,7 @@
       uniforms: {
         uMorph: { value: 1 },
         uColor: { value: new THREE.Color(FIELD_COLOR) },
-        uSize:  { value: 2.4 },
+        uSize:  { value: 2.7 },
         uScale: { value: window.innerHeight / 2 },
       },
       vertexShader: `
@@ -291,7 +291,7 @@
         void main(){
           vec2 c = gl_PointCoord - vec2(0.5);
           if (dot(c, c) > 0.25) discard;     // round dots
-          gl_FragColor = vec4(uColor, 0.92);
+          gl_FragColor = vec4(uColor, 1.0);
         }
       `,
     });
