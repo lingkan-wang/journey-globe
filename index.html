@@ -240,7 +240,7 @@
     const data = ctx.getImageData(0, 0, cw, ch).data;
 
     const step = 2;                           // every Nth pixel → dot density
-    const flats = [], spheres = [];
+    const flats = [], spheres = [], keeps = [];
     for (let y = 0; y < ch; y += step) {
       for (let x = 0; x < cw; x += step) {
         const i = (y * cw + x) * 4;
@@ -251,14 +251,16 @@
         const lng = (x / cw) * 360 - 180;
         const lat = 90 - (y / ch) * 180;
         if (lat < -56) continue;            // drop the stretched Antarctica band
-        // thin longitudes toward the poles → even density on the globe (no "mosquito-coil" rings)
+        // keep every dot for the flat map; mark polar "extras" so the GLOBE can fade them out
+        // toward the poles (even density, no "mosquito-coil" rings) — map stays dense & clear
         const cosL = Math.max(Math.cos(lat * DEG), 0.05);
         const lngStride = Math.max(1, Math.round(1 / cosL));
-        if (((x / step) % lngStride) !== 0) continue;
+        const keepGlobe = (((x / step) % lngStride) === 0) ? 1 : 0;
         const f = latLngToFlat(lat, lng);
         const s = latLngToSphere(lat, lng);
         flats.push(f.x, f.y, f.z);
         spheres.push(s.x, s.y, s.z);
+        keeps.push(keepGlobe);
       }
     }
     fieldData.flats = flats;
@@ -269,6 +271,7 @@
     geo.setAttribute('position', new THREE.Float32BufferAttribute(spheres, 3)); // bounds only
     geo.setAttribute('aFlat', new THREE.Float32BufferAttribute(flats, 3));
     geo.setAttribute('aSphere', new THREE.Float32BufferAttribute(spheres, 3));
+    geo.setAttribute('aKeep', new THREE.Float32BufferAttribute(keeps, 1));
 
     const mat = new THREE.ShaderMaterial({
       transparent: true,
@@ -281,12 +284,16 @@
       vertexShader: `
         attribute vec3 aFlat;
         attribute vec3 aSphere;
+        attribute float aKeep;
         uniform float uMorph;
         uniform float uSize;
         uniform float uScale;
+        varying float vA;
         float ease(float t){ return t*t*(3.0-2.0*t); }
         void main(){
-          vec3 p = mix(aFlat, aSphere, ease(uMorph));
+          float m = ease(uMorph);
+          vA = (aKeep > 0.5) ? 1.0 : (1.0 - m);   // polar extras fade out as it becomes a globe
+          vec3 p = mix(aFlat, aSphere, m);
           vec4 mv = modelViewMatrix * vec4(p, 1.0);
           gl_PointSize = uSize * (uScale / -mv.z);
           gl_Position = projectionMatrix * mv;
@@ -294,8 +301,10 @@
       `,
       fragmentShader: `
         uniform vec3 uColor;
+        varying float vA;
         void main(){
-          gl_FragColor = vec4(uColor, 1.0);   // square dots → clean grid like the reference
+          if (vA < 0.02) discard;
+          gl_FragColor = vec4(uColor, vA);   // square dots; polar extras fade out on the globe
         }
       `,
     });
