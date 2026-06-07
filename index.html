@@ -435,9 +435,7 @@
     const to = mode === 'globe' ? 1 : 0;
     state.morphAnim = { from: state.morph, to, start: performance.now(), dur: reducedMotion ? 0 : 1200 };
     const d = mode === 'globe' ? globeDistance() : mapDistance();
-    const toPos = mode === 'map'
-      ? new THREE.Vector3(0, 0, d)                 // map: face it head-on
-      : camera.position.clone().setLength(d);      // globe: keep angle, fix distance
+    const toPos = new THREE.Vector3(0, 0, d);      // both modes settle head-on at the fit distance
     state.camTween = { fromPos: camera.position.clone(), toPos, start: performance.now(), dur: reducedMotion ? 0 : 1200 };
     controls.enabled = false;                       // resumed (globe only) when the tween ends
     controls.autoRotate = false;
@@ -559,8 +557,9 @@
   // with the globe's zoom so the card always feels proportional to the globe.
   function cardScale() {
     const base = Math.min(1, Math.min(window.innerWidth, window.innerHeight) / 820);
-    const zoom = state.mode === 'globe' ? globeDistance() / Math.max(camera.position.length(), 1) : 1;
-    return Math.max(0.6, Math.min(1.25, base * zoom));
+    const fit = state.mode === 'globe' ? globeDistance() : mapDistance();
+    const dist = controls ? camera.position.distanceTo(controls.target) : camera.position.length();
+    return Math.max(0.6, Math.min(1.25, base * (fit / Math.max(dist, 1))));
   }
   // === ANIMATE ===
   function animate() {
@@ -579,32 +578,31 @@
       camera.lookAt(0, 0, 0);
       if (ct >= 1) {
         state.camTween = null;
-        if (state.mode === 'globe') {
-          controls.enabled = true;
+        controls.target.set(0, 0, 0);
+        if (state.mode === 'globe') {          // globe: drag-rotate + wheel/pinch zoom + auto-spin
+          controls.enableRotate = true; controls.enablePan = false;
+          controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
+          controls.touches.ONE = THREE.TOUCH.ROTATE;
+          controls.minDistance = 150; controls.maxDistance = 900;
           controls.autoRotate = !reducedMotion && !cardPin;
-          controls.update();                   // resync orbit from current position
+        } else {                               // map: drag-pan + wheel/pinch zoom, stays head-on
+          controls.enableRotate = false; controls.enablePan = true;
+          controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+          controls.touches.ONE = THREE.TOUCH.PAN;
+          controls.minDistance = mapDistance() * 0.45; controls.maxDistance = mapDistance() * 1.1;
+          controls.autoRotate = false;
         }
+        controls.enabled = true;
+        controls.update();
       }
-    } else if (state.mode === 'globe') {
-      controls.update();                       // auto-rotate + drag + zoom (controls own the distance)
     } else {
-      // map: head-on, with gentle cursor parallax (stays readable, never edge-on)
-      const d = mapDistance();
-      const ax = reducedMotion ? 0 : pointer.x * 0.18;
-      const ay = reducedMotion ? 0 : pointer.y * 0.14;
-      state.tiltX += (ax - state.tiltX) * 0.07;
-      state.tiltY += (ay - state.tiltY) * 0.07;
-      camera.position.set(
-        Math.sin(state.tiltX) * d,
-        Math.sin(state.tiltY) * d,
-        Math.cos(state.tiltX) * Math.cos(state.tiltY) * d
-      );
-      camera.lookAt(0, 0, 0);
+      controls.update();   // globe: rotate + zoom · map: pan + zoom (both head-on / fit)
     }
     if (field) {
       field.material.uniforms.uMorph.value = state.morph;
       // keep on-screen dot size consistent across modes (map camera sits farther back)
-      field.material.uniforms.uSize.value = 3.1 * (camera.position.length() / globeDistance());
+      const camDist = controls ? camera.position.distanceTo(controls.target) : camera.position.length();
+      field.material.uniforms.uSize.value = 3.1 * (camDist / globeDistance());
     }
     updatePins(performance.now());
     if (cardPin) { cardEl.style.setProperty('--cs', cardScale().toFixed(3)); positionCard(); }
