@@ -250,6 +250,10 @@
         const lng = (x / cw) * 360 - 180;
         const lat = 90 - (y / ch) * 180;
         if (lat < -56) continue;            // drop the stretched Antarctica band
+        // thin longitudes toward the poles → even density on the globe (no "mosquito-coil" rings)
+        const cosL = Math.max(Math.cos(lat * DEG), 0.05);
+        const lngStride = Math.max(1, Math.round(1 / cosL));
+        if (((x / step) % lngStride) !== 0) continue;
         const f = latLngToFlat(lat, lng);
         const s = latLngToSphere(lat, lng);
         flats.push(f.x, f.y, f.z);
