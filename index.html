@@ -526,7 +526,7 @@
     left = Math.max(pad, Math.min(left, window.innerWidth - w - pad));
     const ox = `${Math.max(0, Math.min(100, ((s.x - left) / w) * 100))}%`;
     cardEl.style.left = `${left}px`;
-    cardEl.style.top = `${Math.max(pad, top)}px`;
+    cardEl.style.top = `${Math.max(pad, Math.min(top, window.innerHeight - h - pad))}px`;
     cardEl.style.setProperty('--ox', ox);
     cardEl.style.setProperty('--oy', oy);
   }
@@ -553,13 +553,10 @@
   }
 
   cardClose.addEventListener('click', hideCard);
-  // Card scale: shrinks on small viewports (e.g. the portfolio embed) and grows/shrinks
-  // with the globe's zoom so the card always feels proportional to the globe.
+  // Card scale: sized to the frame/viewport ONLY (not the zoom level), so the card stays a
+  // fixed, fully-visible size whether you zoom the globe/map in or out.
   function cardScale() {
-    const base = Math.min(1, Math.min(window.innerWidth, window.innerHeight) / 820);
-    const fit = state.mode === 'globe' ? globeDistance() : mapDistance();
-    const dist = controls ? camera.position.distanceTo(controls.target) : camera.position.length();
-    return Math.max(0.6, Math.min(1.25, base * (fit / Math.max(dist, 1))));
+    return Math.max(0.7, Math.min(1.0, Math.min(window.innerWidth, window.innerHeight) / 600));
   }
   // === ANIMATE ===
   function animate() {
