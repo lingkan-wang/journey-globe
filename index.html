@@ -576,7 +576,11 @@
       );
       camera.lookAt(0, 0, 0);
     }
-    if (field) field.material.uniforms.uMorph.value = state.morph;
+    if (field) {
+      field.material.uniforms.uMorph.value = state.morph;
+      // keep on-screen dot size consistent across modes (map camera sits farther back)
+      field.material.uniforms.uSize.value = 2.7 * (camera.position.length() / globeDistance());
+    }
     updatePins(performance.now());
     if (cardPin) positionCard();
     updateArcs();
