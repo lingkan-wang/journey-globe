@@ -7,7 +7,7 @@
   <style>
     :root { --accent: #156BF3; }
     * { box-sizing: border-box; }
-    html, body { margin: 0; height: 100%; background: #f4f6fb; overflow: hidden; }
+    html, body { margin: 0; height: 100%; background: #fafafa; overflow: hidden; }
     body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
            color: #1a1f2b; -webkit-font-smoothing: antialiased; }
     #scene { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
@@ -54,7 +54,7 @@
                   font-size: 1.33em; line-height: 1; cursor: pointer; z-index: 1; }
     @media (prefers-reduced-motion: reduce) { #card { transition: opacity .12s ease; transform: none; } #card.show { transform: none; } }
     #fallback { position: fixed; inset: 0; z-index: 30; display: grid; place-content: center;
-                text-align: center; gap: 6px; padding: 24px; background: #f4f6fb; color: #5b6678; }
+                text-align: center; gap: 6px; padding: 24px; background: #fafafa; color: #5b6678; }
     #fallback[hidden] { display: none; }   /* the hidden attr must win over the #id display:grid above */
     #fallback p { margin: 0; }
   </style>
@@ -197,7 +197,7 @@
   if (renderer) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0xf4f6fb, 1);
+    renderer.setClearColor(0xfafafa, 1);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
