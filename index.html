@@ -180,7 +180,7 @@
     const t = Math.tan((camera.fov * DEG) / 2);
     return Math.max((halfH * margin) / t, (halfW * margin) / (t * camera.aspect));
   }
-  function globeDistance() { return fitDistance(R, R); }
+  function globeDistance() { return fitDistance(R, R, 1.24); }   // extra margin so the globe clears the top toggle
   function mapDistance() { return fitDistance(Math.PI * R, (Math.PI * R) / 2); }
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.9));
