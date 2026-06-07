@@ -32,11 +32,9 @@
             pointer-events: none; }
     #card.show { opacity: 1; transform: scale(1); }
     #card.touch { pointer-events: auto; }
-    #card-photo { aspect-ratio: 16 / 10; width: 100%;
-                  background: linear-gradient(135deg, rgba(21,107,243,0.22), rgba(21,107,243,0.04));
-                  border-bottom: 1px solid rgba(0,0,0,0.06);
-                  display: grid; place-items: center; color: rgba(21,107,243,0.5); font-size: 12px; }
-    #card-photo::after { content: 'photo'; }
+    .card-photo { width: 100%; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; margin: 0 0 10px;
+                  background: linear-gradient(135deg, rgba(21,107,243,0.18), rgba(21,107,243,0.04)); }
+    .card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
     #card-body { padding: 14px 16px 16px; }
     .card-city { font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
                  color: var(--accent); margin: 0 0 8px; font-weight: 600; }
@@ -68,7 +66,6 @@
 
   <div id="card" role="dialog" aria-label="Place details" hidden>
     <button id="card-close" type="button" aria-label="Close" hidden>×</button>
-    <div id="card-photo" aria-hidden="true"></div>
     <div id="card-body"></div>
   </div>
 
@@ -91,25 +88,25 @@
   const LOCATIONS = [
     { id: 'yangzhou', city: 'Yangzhou, Jiangsu', lat: 32.39, lng: 119.41,
       experiences: [
-        { org: 'Born here', role: '', dates: '2001.08', blurb: 'Where the story starts.' },
+        { org: 'Born in Yangzhou', role: '', dates: '2001.08', blurb: 'Where the story starts.', photo: 'photos/yangzhou.jpg' },
       ] },
     { id: 'beijing', city: 'Beijing', lat: 39.90, lng: 116.40,
       experiences: [
-        { org: '北京化工大学', role: 'Undergraduate', dates: '2019.08–2023.06', blurb: 'Undergraduate — where design began.' },
-        { org: '清华大学未来实验室', role: 'Research', dates: '2023.08–2024.03', blurb: 'Research at the Future Lab, Tsinghua.' },
-        { org: '快手 Kuaishou', role: 'Product Designer Intern', dates: '2024.05–2024.08', blurb: 'Product design for creators at scale.' },
+        { org: 'Beijing University of Chemical Technology', role: 'Undergraduate', dates: '2019.08–2023.06', blurb: 'Where design began.', photo: 'photos/bjut.jpg' },
+        { org: 'Tsinghua University · The Future Laboratory', role: 'Research', dates: '2023.08–2024.03', blurb: 'Research at the Future Lab.', photo: 'photos/tsinghua.jpg' },
+        { org: 'Kuaishou', role: 'Product Designer Intern', dates: '2024.05–2024.08', blurb: 'Product design for creators at scale.', photo: 'photos/kuaishou.jpg' },
       ] },
     { id: 'suzhou', city: 'Suzhou', lat: 31.30, lng: 120.58,
       experiences: [
-        { org: 'Ecovacs Robotics', role: 'Product Designer Intern', dates: '2024.03–2024.05', blurb: 'Product design for home robotics.' },
+        { org: 'Ecovacs Robotics', role: 'Product Designer Intern', dates: '2024.03–2024.05', blurb: 'Product design for home robotics.', photo: 'photos/ecovacs.jpg' },
       ] },
     { id: 'pittsburgh', city: 'Pittsburgh, USA', lat: 40.44, lng: -79.99,
       experiences: [
-        { org: 'Carnegie Mellon · HCI Institute', role: "Master's, HCI", dates: '2024.08–2025.12', blurb: 'Studying human-computer interaction.' },
+        { org: 'Carnegie Mellon · HCI Institute', role: "Master's, HCI", dates: '2024.08–2025.12', blurb: 'Studying human-computer interaction.', photo: 'photos/cmu.jpg' },
       ] },
     { id: 'sanjose', city: 'San Jose, USA', lat: 37.34, lng: -121.89,
       experiences: [
-        { org: 'Cyan Studio', role: 'Product Designer', dates: '2025.12–present', blurb: 'Designing products and teaching.' },
+        { org: 'Cyan Studio', role: 'Product Designer', dates: '2025.12–present', blurb: 'Designing products and teaching.', photo: 'photos/cyan.jpg' },
       ] },
   ];
 
@@ -488,6 +485,7 @@
   function renderCardBody(loc) {
     const exps = loc.experiences.map(e => `
       <div class="card-exp">
+        ${e.photo ? `<div class="card-photo"><img src="${e.photo}" alt="" loading="lazy" onerror="this.style.display='none'"></div>` : ''}
         <p class="card-org">${e.org}</p>
         ${e.role ? `<p class="card-role">${e.role}</p>` : ''}
         <p class="card-dates">${e.dates}</p>
