@@ -82,7 +82,7 @@
   <script>
   // === CONSTANTS ===
   const ACCENT_HEX = 0x156BF3;
-  const FIELD_COLOR = 0x3f5176;   // darker blue-slate dots, clear on near-white
+  const FIELD_COLOR = 0x7c89a4;   // medium slate; reads as a clean grid on near-white
   const R = 100;                  // globe radius
   const DEG = Math.PI / 180;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -231,7 +231,7 @@
 
   async function buildDotField() {
     const img = await loadImage('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
-    const cw = 400, ch = 200;                 // sample resolution (2:1 equirectangular)
+    const cw = 440, ch = 220;                 // sample resolution (2:1 equirectangular)
     const cnv = document.createElement('canvas');
     cnv.width = cw; cnv.height = ch;
     const ctx = cnv.getContext('2d', { willReadFrequently: true });
@@ -289,9 +289,7 @@
       fragmentShader: `
         uniform vec3 uColor;
         void main(){
-          vec2 c = gl_PointCoord - vec2(0.5);
-          if (dot(c, c) > 0.25) discard;     // round dots
-          gl_FragColor = vec4(uColor, 1.0);
+          gl_FragColor = vec4(uColor, 1.0);   // square dots → clean grid like the reference
         }
       `,
     });
@@ -579,7 +577,7 @@
     if (field) {
       field.material.uniforms.uMorph.value = state.morph;
       // keep on-screen dot size consistent across modes (map camera sits farther back)
-      field.material.uniforms.uSize.value = 2.7 * (camera.position.length() / globeDistance());
+      field.material.uniforms.uSize.value = 3.1 * (camera.position.length() / globeDistance());
     }
     updatePins(performance.now());
     if (cardPin) positionCard();
