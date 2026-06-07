@@ -40,6 +40,10 @@
                  color: var(--accent); margin: 0 0 8px; font-weight: 600; }
     .card-exp { padding: 8px 0; border-top: 1px solid rgba(0,0,0,0.07); }
     .card-exp:first-of-type { border-top: 0; padding-top: 0; }
+    .exps { display: flex; flex-direction: column; }
+    #card.multi { width: 580px; }
+    #card.multi .exps { flex-direction: row; gap: 14px; align-items: flex-start; }
+    #card.multi .card-exp { flex: 1 1 0; min-width: 0; border-top: 0; padding: 0; }
     .card-org { font-size: 15px; font-weight: 600; margin: 0; color: #1a1f2b; }
     .card-role { font-size: 13px; margin: 2px 0 0; color: #5b6678; }
     .card-dates { font-size: 12px; margin: 2px 0 0; color: #9aa3b2; }
@@ -491,7 +495,8 @@
         <p class="card-dates">${e.dates}</p>
         <p class="card-blurb">${e.blurb}</p>
       </div>`).join('');
-    cardBody.innerHTML = `<p class="card-city">${loc.city}</p>${exps}`;
+    cardBody.innerHTML = `<p class="card-city">${loc.city}</p><div class="exps">${exps}</div>`;
+    cardEl.classList.toggle('multi', loc.experiences.length > 1);
   }
 
   function projectToScreen(v3) {
