@@ -249,6 +249,7 @@
         if (!isLand) continue;
         const lng = (x / cw) * 360 - 180;
         const lat = 90 - (y / ch) * 180;
+        if (lat < -56) continue;            // drop the stretched Antarctica band
         const f = latLngToFlat(lat, lng);
         const s = latLngToSphere(lat, lng);
         flats.push(f.x, f.y, f.z);
